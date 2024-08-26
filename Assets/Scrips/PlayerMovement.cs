@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
     private bool enElSuelo;
     private float rotacionCamaraX = 0f;
     private float rotacionCamaraY = 0f;
+    public float alturaLimiteInferior = -10f;
 
     private void Start()
     {
@@ -31,6 +33,8 @@ public class PlayerMovement : MonoBehaviour
     {
         MoverPersonaje();
         ControlarCamara();
+        VerificarAltura();
+
         if (Input.GetMouseButtonDown(0))
         {
             DashForward();
@@ -66,10 +70,12 @@ public class PlayerMovement : MonoBehaviour
     {
         rotacionCamaraX += Input.GetAxis("Mouse X") * sensibilidadCamara * Time.deltaTime;
         rotacionCamaraY -= Input.GetAxis("Mouse Y") * sensibilidadCamara * Time.deltaTime;
+
         rotacionCamaraY = Mathf.Clamp(rotacionCamaraY, -40f, 85f);
         Quaternion rotacionCamara = Quaternion.Euler(rotacionCamaraY, rotacionCamaraX, 0f);
         Vector3 posicionCamara = transform.position - (rotacionCamara * Vector3.forward * distanciaCamara) + Vector3.up * alturaCamara;
         camara.position = posicionCamara;
+
         camara.LookAt(transform.position + Vector3.up * alturaCamara);
     }
 
@@ -77,6 +83,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rb.AddForce(Physics.gravity * rb.mass * gravedadAdicional * Time.fixedDeltaTime, ForceMode.Acceleration);
     }
+
     private void OnCollisionStay(Collision collision)
     {
         if (Plataformas == (Plataformas | (1 << collision.gameObject.layer)))
@@ -92,21 +99,37 @@ public class PlayerMovement : MonoBehaviour
             enElSuelo = false;
         }
     }
+
     private void DashForward()
     {
-        //solo permite hacer dash si no esta en cooldown
         if (canDash)
         {
-            Vector3 dashDirection = transform.forward; //usa la direccion hacia adelante del jugador actual
-            rb.AddForce(dashDirection * dashForce, ForceMode.Impulse); //aplica la fuerza para el dash
-            StartCoroutine(DashCooldownRoutine()); //inicia el cooldown
+            Vector3 dashDirection = transform.forward;
+            rb.AddForce(dashDirection * dashForce, ForceMode.Impulse);
+            StartCoroutine(DashCooldownRoutine());
         }
     }
 
     IEnumerator DashCooldownRoutine()
     {
-        canDash = false; //Deshabilita el dash
-        yield return new WaitForSeconds(dashCooldown); //espera el tiempo del cooldownn
-        canDash = true; //habilita nuevamente el dash
+        canDash = false;
+        yield return new WaitForSeconds(dashCooldown);
+        canDash = true;
+    }
+
+    private void VerificarAltura()
+    {
+        float alturaUltimaCapa = -5f;
+
+        if (transform.position.y < alturaUltimaCapa)
+        {
+            Perder(); //llama a la función de pérdida si el jugador desciende por debajo de la última capa
+        }
+    }
+
+    private void Perder()
+    {
+        Debug.Log("has perdido X.x");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name); //reinicia la escena actual
     }
 }

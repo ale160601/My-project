@@ -25259,6 +25259,7 @@ MonoBehaviour:
   Plataformas:
     serializedVersion: 2
     m_Bits: 64
+  alturaLimiteInferior: -2
 --- !u!54 &2121220477
 Rigidbody:
   m_ObjectHideFlags: 0
