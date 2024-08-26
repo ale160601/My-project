@@ -23,12 +23,9 @@ public class DesaparecerPlataforma : MonoBehaviour
     }
     private IEnumerator Desaparecer()
     {
-        // Esperar el tiempo antes de desaparecer
         yield return new WaitForSeconds(tiempoAntesDeDesaparecer);
-        // Desactivar el Renderer y el Collider para simular desaparición
         rend.enabled = false;
         colllider.enabled = false;
-        // Resetear la plataforma para futuras colisiones
         activada = false;
     }
 }
