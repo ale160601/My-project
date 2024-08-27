@@ -20,8 +20,7 @@ public class PlayerMovement : MonoBehaviour
     private float rotacionCamaraX = 0f;
     private float rotacionCamaraY = 0f;
     public float alturaLimiteInferior = -10f;
-
-    private Animator animator;
+    public Animator animator;
 
     private void Start()
     {
@@ -42,9 +41,7 @@ public class PlayerMovement : MonoBehaviour
             DashForward();
         }
 
-
         float velocidadVertical = rb.velocity.y;
-        animator.SetBool("isJumping", velocidadVertical > 0.1f);
         animator.SetBool("isFalling", velocidadVertical < -0.1f);
     }
 
@@ -76,8 +73,14 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetButtonDown("Jump") && rb.velocity.y <= 0.1f)
         {
+            animator.SetBool("isJumping", true);
             rb.AddForce(Vector3.up * fuerzaSalto, ForceMode.Impulse);
         }
+        else
+        {
+            animator.SetBool("isJumping", false);
+        } 
+            
     }
 
     private void ControlarCamara()
