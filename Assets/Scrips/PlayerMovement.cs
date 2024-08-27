@@ -17,15 +17,14 @@ public class PlayerMovement : MonoBehaviour
     public float gravedadAdicional = 10f;
     public LayerMask Plataformas;
     private Rigidbody rb;
+    private bool enElSuelo;
     private float rotacionCamaraX = 0f;
     private float rotacionCamaraY = 0f;
     public float alturaLimiteInferior = -10f;
-    public Animator animator;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        animator = GetComponent<Animator>();
         Cursor.lockState = CursorLockMode.Locked;
         rb.freezeRotation = true;
     }
@@ -36,13 +35,10 @@ public class PlayerMovement : MonoBehaviour
         ControlarCamara();
         VerificarAltura();
 
-        if (Input.GetMouseButtonDown(0) && canDash)
+        if (Input.GetMouseButtonDown(0))
         {
             DashForward();
         }
-
-        float velocidadVertical = rb.velocity.y;
-        animator.SetBool("isFalling", velocidadVertical < -0.1f);
     }
 
     private void FixedUpdate()
@@ -57,30 +53,17 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 direccionMovimiento = camara.forward * movimientoVertical + camara.right * movimientoHorizontal;
         direccionMovimiento.y = 0f;
-
         if (direccionMovimiento.magnitude >= 0.1f)
         {
             Quaternion rotacionDeseada = Quaternion.LookRotation(direccionMovimiento);
             rb.MoveRotation(Quaternion.Slerp(rb.rotation, rotacionDeseada, Time.deltaTime * velocidadMovimiento));
             rb.MovePosition(transform.position + direccionMovimiento.normalized * velocidadMovimiento * Time.deltaTime);
-
-            animator.SetBool("isWalking", true);
-        }
-        else
-        {
-            animator.SetBool("isWalking", false);
         }
 
-        if (Input.GetButtonDown("Jump") && rb.velocity.y <= 0.1f)
+        if (Input.GetButtonDown("Jump") && enElSuelo)
         {
-            animator.SetBool("isJumping", true);
             rb.AddForce(Vector3.up * fuerzaSalto, ForceMode.Impulse);
         }
-        else
-        {
-            animator.SetBool("isJumping", false);
-        } 
-            
     }
 
     private void ControlarCamara()
@@ -101,11 +84,30 @@ public class PlayerMovement : MonoBehaviour
         rb.AddForce(Physics.gravity * rb.mass * gravedadAdicional * Time.fixedDeltaTime, ForceMode.Acceleration);
     }
 
+    private void OnCollisionStay(Collision collision)
+    {
+        if (Plataformas == (Plataformas | (1 << collision.gameObject.layer)))
+        {
+            enElSuelo = true;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (Plataformas == (Plataformas | (1 << collision.gameObject.layer)))
+        {
+            enElSuelo = false;
+        }
+    }
+
     private void DashForward()
     {
-        Vector3 dashDirection = transform.forward;
-        rb.AddForce(dashDirection * dashForce, ForceMode.Impulse);
-        StartCoroutine(DashCooldownRoutine());
+        if (canDash)
+        {
+            Vector3 dashDirection = transform.forward;
+            rb.AddForce(dashDirection * dashForce, ForceMode.Impulse);
+            StartCoroutine(DashCooldownRoutine());
+        }
     }
 
     IEnumerator DashCooldownRoutine()
@@ -121,7 +123,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (transform.position.y < alturaUltimaCapa)
         {
-            Perder();
+            Perder(); //llama a la función de perdida si el jugador desciende por debajo de la última capa
         }
     }
 
