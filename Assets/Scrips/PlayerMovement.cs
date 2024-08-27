@@ -21,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     private float rotacionCamaraX = 0f;
     private float rotacionCamaraY = 0f;
     public float alturaLimiteInferior = -10f;
+    public Animator animator;
 
     private void Start()
     {
@@ -31,6 +32,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        float velocidadX = Input.GetAxis("Horizontal")*Time.deltaTime*velocidadMovimiento;
+        animator.SetFloat("movement", velocidadX*velocidadMovimiento);
         MoverPersonaje();
         ControlarCamara();
         VerificarAltura();
