@@ -5405,6 +5405,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   alturaLimiteInferior: -5
+  animator: {fileID: 0}
 --- !u!54 &446622018
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -16471,7 +16472,7 @@ GameObject:
   - component: {fileID: 1332174157}
   m_Layer: 0
   m_Name: "Plataformas1\xB0Planta"
-  m_TagString: Untagged
+  m_TagString: Plataformas
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16504,8 +16505,8 @@ Transform:
   - {fileID: 2071470398}
   - {fileID: 628177302}
   - {fileID: 1864856760}
-  - {fileID: 1594059394}
   - {fileID: 927802190}
+  - {fileID: 1594059394}
   - {fileID: 242781339}
   - {fileID: 1172220232}
   - {fileID: 753437133}
@@ -17893,7 +17894,7 @@ GameObject:
   - component: {fileID: 1471647016}
   m_Layer: 0
   m_Name: "Plataformas2\xB0Planta"
-  m_TagString: Untagged
+  m_TagString: Plataformas
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
