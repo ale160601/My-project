@@ -6,32 +6,14 @@ using UnityEngine.UI;
 using UnityEngine.Audio;
 
 public class Menu: MonoBehaviour
-{
-    public AudioSource SFXSource;
-    public AudioClip SFXClip;
-    public Slider masterSlider, bgmSlider, sfxSlider;
-    public AudioMixer mixer;
-
-    private void Update()
+{ 
+    public void Jugar()
     {
-        mixer.SetFloat("MasterVolume", masterSlider.value);
-        mixer.SetFloat("BGMVolume", bgmSlider.value);
-        mixer.SetFloat("SFXVolume", sfxSlider.value);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
-    public void PlayGame()
-    {
-        SceneManager.LoadScene("Game");
-    }
-
-    public void PlaySound()
-    {
-        SFXSource.clip = SFXClip;
-        SFXSource.Play();
-    }
-
-    public void ExitGame()
+    public void Salir()
     {
         Application.Quit();
-        Debug.Log("Saliste :)");
+        Debug.Log("Salir");
     }
 }
