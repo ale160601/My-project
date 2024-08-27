@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Audio;
 
-public class Menu : MonoBehaviour
+public class Menu: MonoBehaviour
 {
     public AudioSource SFXSource;
     public AudioClip SFXClip;
